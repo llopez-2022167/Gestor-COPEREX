@@ -1,43 +1,28 @@
 // models/companyModel.js
-import mongoose, { mongo } from "mongoose";
+import  { Schema, model } from "mongoose";
 
 const companySchema = mongoose.Schema({
     name: {
         type: String,
         required: true
     },
-    password:{
-        type: String,
-        minLength: [8, 'Password must be 8 characters'],
-        required: true
-    },
-    businessUser: {
-        type: String,
-        unique: true,
-        lowercase: true,
-        required: true
-    },
-    //nivel de impacto
-    impactLevel: {
-        type: String,
-        required: true
-    },
-    //Años de trayectoria
-    yearsOfExperience: {
-        type: Number,
-        required: true
-    },
-    //categoría empresarial
-    businessCategory: {
-        type: String,
-        required: true
-    },
-    rol: {
+    impact: {
         type: String,
         upperCase: true,
-        enum: ['ADMIN'],
-        required: true
-    }
+        anum: ['Alto', 'Bajo', 'Medio'],
+        require: true
+    },
+    yearsofexperience:{
+        type: String,
+        require: [true, "se requiere contraseña"]
+    },
+    category: {
+        type: Schema.Types.ObjectId,
+        ref: 'categoria',
+        require: true
+    },
+},{
+    versionKey: false
 });
 
-export default mongoose.model('company', companySchema)
+export default model('company', companySchema)

@@ -1,62 +1,31 @@
 'use strict'
 
-import Company from './company.model.js'
+import Category from '../category/category.model.js'
+import Company from '../company/company.model.js'
 import {checkUpdate} from '../utils/validator.js'
 import {generateJwt} from '../utils/jwt.js'
-  
-module.exports = { login };
+import ExcelExcelJS from 'exceljs'
   
   // controllers/companyController.js
 //const { Company } = require('../models/companyModel');
   
 
-export const test = (req, res)=>{
-    console.log('test is running')
-    return res.send({message: 'test is running'})
-}
-
-export const registerCompany = async(req, res) => {
+export const addCompany = async(req, res) => {
     try{
         // Lógica de registro de empresa
         let data = req.body
-        data.password = await encrypt(data.password)
-        data.role = 'ADMIN'
+        let category = await Category.findOne({_id: data.category})
+        if(!category) return res.status(404).send(
+            {message: 'Categoria no encontrada'}
+        )
         let company = new Company(data)
         await company.save()
-        return res.send({message: `Registered successfully, can  be logged whiteh username ${company.businessUser}`})
+        return res.send({message: 'Se creo nueva empresa'})
     }catch(err){
         console.error(err)
-        return res.status(500).send({message: 'Error registering user', err: err})
+        return res.status(500).send({message: 'Error al guardar'})
     }
 }
-
-// controllers/authController.js
-export const login = async(req, res) => {
-    // Lógica de inicio de sesión
-    try{
-         //Capturar los datos (body)
-        let { businessUser,password } = req.body
-        //Validar que el usuario exista
-        let company = await Company.dinfOne({businessUser}) //buscar un solo registro
-         //Verifico que la contraseña coincida
-        if(company && await checkPassword(password, company.password)){
-            let loggedCompany ={
-                uid: company._id,
-                businessUser: company.businessUser,
-                name: company.name,
-                role: company.role
-            }
-             //Generar el Token
-            let token = await generateJwt(loggedCompany)
-            //Respondo al company
-            return res.send({message: `welcome ${loggedCompany.name}`, loggedCompany, token})
-        }
-        return res.status(404).send({message: 'Invalid credentials'})
-    }catch(err){
-        console.error(err)
-        return res.status(500).send({message: 'Error to login'})
-    }
-};
   
 // export const viewCompanies = async(req, res) => {
 //     // Lógica de visualización de empresas
@@ -91,20 +60,95 @@ export const login = async(req, res) => {
 export const update = async(req, res) => {
     // Lógica de edición de empresa
     try{
-        let { id } = req.params
         let data = req.body
-
+        let { id } = req.params
         let update = checkUpdate(data, id)
-        if(!update) return res.status(400).send({message: 'Have submitted some data that cannot be updated or missing data'})
-        let updateCompany = await Company.findOneAndUpdate({_id: id},data,{new: true})
-        if(!update) return res.status(401).send({message: 'User not found and not updated'})
+        if(!update) return res.status(400).send({message: 'Han enviado algunos datos que no se pueden actualizar o faltan datos'})
 
-        return res.send({message: 'Updated user', update})
+        let updateCompany = await Company.findOneAndUpdate({_id: id},data,{new: true}).populate('category')
+        if(!updateCompany) return res.status(401).send({message: 'Producto no encontrado y no actualizado'})
+        return res.send({message: 'Updated product', updateCompany})
     }catch(err){
         console.error(err)
-        return res.status(500).send({message: 'Error updating account'})
+        return res.status(500).send({message: 'Error al actualizar'})
     }
-
 }
+
+//Excel
   
-//module.exports = { registerCompany, viewCompanies, update };
+export const filterAZ = async (req, res) => {
+    try {
+        const companies = await Company.find().sort({ name: 1 }); // Orden ascendente por el campo 'name'
+        return res.status(200).json(companies);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Error retrieving sorted companies', error: error });
+    }
+}
+
+export const filterZA = async (req, res) => {
+    try {
+        const companies = await Company.find().sort({ name: -1 }); // Orden descendente por el campo 'name'
+        return res.status(200).json(companies);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Error retrieving sorted companies', error: error });
+    }
+}
+
+export const filterYears = async (req, res) => {
+    try {
+        const companies = await Company.find().sort({ yearExp: -1 }); // Orden descendente por el campo 'yearExp'
+        return res.status(200).json(companies);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Error retrieving sorted companies by experience', error: error });
+    }
+}
+
+export const filterImpact = async (req, res) => {
+    try {
+        const companies = await Company.find().sort({ impact: 1 }); // Orden ascendente por el campo 'impact'
+        return res.status(200).json(companies);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Error retrieving sorted companies by impact', error: error });
+    }
+}
+
+export const generateXLSX = async(req, res)=>{
+    try {
+        let company = await Company.find().populate('category', ['name', 'description'])
+
+        let excelBook = new ExcelJS.Workbook()
+        let sheet = excelBook.addWorksheet('Company')
+
+        sheet.columns =[
+            {header: 'Name', key: 'name', width: 20},
+            {header: 'Impact', key: 'impact', width: 20},
+            {header: 'Year of Experiencde', key: 'yearExp', width: 20},
+            {header: 'Category', key: 'category', width: 20},
+            {header: 'Description', key: 'description', width: 20},
+        ]
+
+        company.forEach(company =>{
+            sheet.addRow({
+                name: company.name,
+                impact: company.impact,
+                yearExp: company.yearExp,
+                category: company.category.name,
+                description: company.category.description
+            })
+        })
+
+        let filePath = 'company.xlsx'
+        await excelBook.xlsx.writeFile(filePath)
+
+        res.attachment(filePath)
+        res.send()
+    }  catch (err) {
+        console.error(err);
+        return res.status(500).send({ message: 'Error fetching companies and generating Excel', err: err });
+    }
+}
+
