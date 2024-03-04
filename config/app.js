@@ -8,7 +8,7 @@ import morgan from 'morgan'
 import helmet  from 'helmet'
 import cors from 'cors'
 import { config } from 'dotenv'
-import companyRoutes from '../src/compny/company.routes.js'
+import companyRoutes from '../src/company/company.routes.js'
 
 //Configyuraciones
 const app = express()

@@ -1,6 +1,8 @@
 //Ejecutar servicios
-import { initServer } from "./configs/app.js"
-import { connect } from "./configs/mongo.js"
+import { initSever } from "./config/app.js";
+import { connect } from "./config/mongo.js";
+import { defaultAdmin  } from "./src/user/user.controller.js";
 
-initServer()
+initSever()
 connect()
+defaultAdmin()

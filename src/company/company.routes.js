@@ -1,13 +1,15 @@
 // routes/authRoutes.js
-import express from 'express'
-import {validateJwt, isAdmin} from '../middlewares/validate-jwt.js'
-import {test, registerCompany,login,viewCompanies,update}from './company.controller.js'
+import {Router} from 'express'
+import { add, filterAZ, filterImpact, filterYears, filterZA, update, generateXLSX } from '../company/company.controller.js'
 
-const api = express.Router();
+const api = Router()
 
-api.post('/registerCompany', registerCompany)
-api.post('/login', login)
+api.post('/add', add)
+api.put('/update/:id', update)
+api.get('/filterAZ', filterAZ)
+api.get('/filterZA', filterZA)
+api.get('/filterYear', filterYears)
+api.get('/filterImpact', filterImpact)
+api.get('/generateExcel', generateXLSX)
 
-//RUTAS PRIVADAS
-api.get('/test', [validateJwt, isAdmin], test)
-api.put('/update/:id', [validateJwt],update)
+export default api

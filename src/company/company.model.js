@@ -1,7 +1,7 @@
 // models/companyModel.js
-import  { Schema, model } from "mongoose";
+import  { Schema, model } from 'mongoose';
 
-const companySchema = mongoose.Schema({
+const companySchema = Schema({
     name: {
         type: String,
         required: true
@@ -12,7 +12,7 @@ const companySchema = mongoose.Schema({
         anum: ['Alto', 'Bajo', 'Medio'],
         require: true
     },
-    yearsofexperience:{
+    yearExp:{
         type: String,
         require: [true, "se requiere contraseña"]
     },

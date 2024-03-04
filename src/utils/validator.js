@@ -1,4 +1,3 @@
-//Validar diferentes datos.
 'use strict'
 
 import { hash, compare } from 'bcrypt'
@@ -12,6 +11,16 @@ export const encrypt = (password)=>{
         return err
     }
 }
+
+export const comparePassword = async(password, hash)=>{
+    try {
+        return await compare(password, hash)
+    } catch (error) {
+        console.error(error);
+        return error  
+    }
+}
+
 
 //Validar la contraseña
 export const checkPassword = async(password, hash)=>{
