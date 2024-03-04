@@ -1,0 +1,81 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "COPEREX",
+    "dateExported": "2024-03-04T04:19:51.573Z",
+    "version": "1.1",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "c0790371-87e6-4b65-996a-cb5f08b98490",
+            "colId": "b73e4ef9-3c14-44f8-b493-d70ad7b0c40d",
+            "containerId": "",
+            "name": "Insciption ",
+            "url": "localhost:2656/user/createAdmin",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2024-03-03T22:08:12.733Z",
+            "modified": "2024-03-04T04:03:53.172Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "formencoded",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "name",
+                        "value": "Fabricio"
+                    },
+                    {
+                        "name": "lastname",
+                        "value": "Tele"
+                    },
+                    {
+                        "name": "username",
+                        "value": "TFabric"
+                    },
+                    {
+                        "name": "password",
+                        "value": "Guatemala"
+                    },
+                    {
+                        "name": "email",
+                        "value": "Tfabricio@gamil.com"
+                    },
+                    {
+                        "name": "phone",
+                        "value": "53273218"
+                    },
+                    {
+                        "name": "role",
+                        "value": "ADMIN"
+                    }
+                ]
+            },
+            "tests": []
+        },
+        {
+            "_id": "de0f785b-c853-498a-bbb2-5354cd18c8c8",
+            "colId": "b73e4ef9-3c14-44f8-b493-d70ad7b0c40d",
+            "containerId": "",
+            "name": "/login",
+            "url": "",
+            "method": "GET",
+            "sortNum": 30000,
+            "created": "2024-03-04T04:16:45.818Z",
+            "modified": "2024-03-04T04:16:45.818Z",
+            "headers": []
+        },
+        {
+            "_id": "55446e22-6a4d-43b8-aaa8-c61bfcd2af94",
+            "colId": "b73e4ef9-3c14-44f8-b493-d70ad7b0c40d",
+            "containerId": "",
+            "name": "updatin",
+            "url": "",
+            "method": "GET",
+            "sortNum": 40000,
+            "created": "2024-03-04T04:17:10.629Z",
+            "modified": "2024-03-04T04:17:10.629Z",
+            "headers": []
+        }
+    ]
+}
